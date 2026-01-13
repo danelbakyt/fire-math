@@ -8,7 +8,7 @@ class StartScene extends Phaser.Scene {
   }
 
   create() {
-    this.add.rectangle(0, 0, 800, 600, 0x2d2d2d).setOrigin(0)
+    this.add.rectangle(0, 0, 800, 600, 0xFFFFFF).setOrigin(0)
 
     this.add.text(400, 200, 'FIRE MATH', { 
         fontSize: '64px', 
@@ -18,7 +18,7 @@ class StartScene extends Phaser.Scene {
 
     this.add.text(400, 270, 'Rapid Arithmetic', { 
         fontSize: '24px', 
-        color: '#ffffff' 
+        color: '#000000' 
     }).setOrigin(0.5)
 
     const playBtn = this.add.text(400, 400, 'PLAY', { 
@@ -28,7 +28,7 @@ class StartScene extends Phaser.Scene {
         padding: { x: 20, y: 10 }
     })
     .setOrigin(0.5)
-    .setInteractive({ useHandCursor: true }) // Adds hand cursor on hover
+    .setInteractive({ useHandCursor: true })
 
     playBtn.on('pointerdown', () => {
         this.scene.start('scene-game')
@@ -46,21 +46,22 @@ class GameScene extends Phaser.Scene {
     this.score = 0
     this.currentAnswer = 0
     this.userAnswer = ""
-    this.timeLeft = 10
+    this.timeLeft = 20
   }
 
   create() {
     this.score = 0
     this.userAnswer = ""
-    this.timeLeft = 10
+    this.timeLeft = 20
 
-    this.add.rectangle(0, 0, 800, 600, 0x87CEEB).setOrigin(0)
+    this.add.rectangle(0, 0, 800, 600, 0xFFFFFF).setOrigin(0)
     
     this.add.rectangle(400, 300, 400, 400, 0x666666)
     this.fireSquare = this.add.rectangle(400, 300, 300, 300, 0xFF0000)
 
-    this.scoreText = this.add.text(20, 20, 'Score: 0', { fontSize: '30px', color: '#fff' })
-    this.timerText = this.add.text(780, 20, 'Time: 10', { fontSize: '30px', color: '#fff' }).setOrigin(1, 0)
+    this.scoreText = this.add.text(20, 20, 'Score: 0', { fontSize: '30px', color: '#000' })
+    this.timerText = this.add.text(780, 20, 'Time: 20', { fontSize: '30px', color: '#000' }).setOrigin(1, 0)
+    this.levelText = this.add.text(400, 200, '', { fontSize: '20px', color: '#000' }).setOrigin(0.5)
     
     this.problemText = this.add.text(400, 260, '', { 
         fontSize: '48px', color: '#fff', fontStyle: 'bold' 
@@ -90,26 +91,48 @@ class GameScene extends Phaser.Scene {
     this.timerText.setText('Time: ' + this.timeLeft)
 
     if (this.timeLeft <= 0) {
-        // LOSE CONDITION: Time runs out
+        //Lose condition
         this.scene.start('scene-result', { score: this.score, won: false })
     }
   }
 
   generateProblem() {
-    let n1 = Phaser.Math.Between(1, 100)
-    let n2 = Phaser.Math.Between(1, 100)
-    this.currentAnswer = n1 + n2
-    this.userAnswer = ""
-    this.problemText.setText(`${n1} + ${n2}`)
-    this.inputText.setText("?")
+    let n1, n2, operator;
     this.fireSquare.setVisible(true)
+
+    //Difficulty levels
+    if (this.score < 30) {
+        this.levelText.setText("Level 1: Addition")
+        n1 = Phaser.Math.Between(1, 10)
+        n2 = Phaser.Math.Between(1, 10)
+        this.currentAnswer = n1 + n2
+        operator = "+"
+    } 
+    else if (this.score < 60) {
+        this.levelText.setText("Level 2: Subtraction")
+        n1 = Phaser.Math.Between(10, 20)
+        n2 = Phaser.Math.Between(1, 9)
+        this.currentAnswer = n1 - n2
+        operator = "-"
+    } 
+    else {
+        this.levelText.setText("Level 3: Multiplication")
+        n1 = Phaser.Math.Between(2, 9)
+        n2 = Phaser.Math.Between(2, 9)
+        this.currentAnswer = n1 * n2
+        operator = "x"
+    }
+
+    this.userAnswer = ""
+    this.problemText.setText(`${n1} ${operator} ${n2}`)
+    this.inputText.setText("?")
   }
 
   handleInput(event) {
     if (event.key >= '0' && event.key <= '9') {
         this.userAnswer += event.key
         this.inputText.setText(this.userAnswer)
-    } else if (event.keyCode === 8) { //backspace
+    } else if (event.keyCode === 8) { //Backspace
         this.userAnswer = this.userAnswer.slice(0, -1)
         this.inputText.setText(this.userAnswer)
     } else if (event.keyCode === 13) { //Enter
@@ -123,6 +146,10 @@ class GameScene extends Phaser.Scene {
         this.scoreText.setText('Score: ' + this.score)
         this.fireSquare.setVisible(false)
         
+        //Bonus time
+        this.timeLeft += 2
+        this.timerText.setText('Time: ' + this.timeLeft)
+
         //win condition
         if (this.score >= 100) {
             this.scene.start('scene-result', { score: this.score, won: true })
@@ -148,7 +175,7 @@ class ResultScene extends Phaser.Scene {
   }
 
   create() {
-    this.add.rectangle(0, 0, 800, 600, 0x000000).setOrigin(0)
+    this.add.rectangle(0, 0, 800, 600, 0xFFFFFF).setOrigin(0)
 
     const titleText = this.hasWon ? 'YOU WIN!' : 'TIME\'S UP'
     const color = this.hasWon ? '#00ff00' : '#ff0000'
@@ -161,7 +188,7 @@ class ResultScene extends Phaser.Scene {
 
     this.add.text(400, 300, `Final Score: ${this.finalScore}`, { 
         fontSize: '32px', 
-        color: '#fff' 
+        color: '#000' 
     }).setOrigin(0.5)
 
     const restartBtn = this.add.text(400, 450, 'Main Menu', { 
