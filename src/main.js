@@ -7,26 +7,40 @@ class StartScene extends Phaser.Scene {
     super('scene-start')
   }
 
+  preload() {
+      this.load.audio('bg-music', '/assets/bg.mp3');
+  }
+
   create() {
+    if (!this.sound.get('bg-music')) {
+        const music = this.sound.add('bg-music', { 
+            volume: 0.4, 
+            loop: true 
+        });
+        music.play();
+    }
+
     this.add.rectangle(0, 0, 800, 600, 0xFFFFFF).setOrigin(0)
 
-    this.add.text(400, 200, 'FIRE MATH', { 
+    this.add.text(400, 220, 'FIRE MATH', { 
         fontSize: '64px', 
         color: '#FFD93D', 
         fontStyle: 'bold' 
     }).setOrigin(0.5)
 
-    this.add.text(400, 270, 'Rapid Arithmetic', { 
-        fontSize: '24px', 
-        color: '#000000' 
-    }).setOrigin(0.5)
-
-    this.add.text(400, 340, 'How to play: Enter number-answer and press enter', { 
+    this.add.text(400, 320, 'How to play: Enter number-answer and press enter', { 
     fontSize: '18px', 
     color: '#000000',
     }).setOrigin(0.5);
 
-    const playBtn = this.add.text(400, 400, 'PLAY', { 
+    // Add this below your "How to play" text and above the Play button
+    this.add.text(400, 350, 'Bonus: +2 seconds for every correct answer!', { 
+        fontSize: '18px', 
+        color: '#33B864',
+        fontStyle: 'bold'
+    }).setOrigin(0.5);
+
+    const playBtn = this.add.text(400, 410, 'PLAY', { 
         fontSize: '32px', 
         color: '#FF8C42', 
         backgroundColor: '#000',
@@ -55,7 +69,7 @@ class GameScene extends Phaser.Scene {
   }
 
   preload() {
-      this.load.image('flare', '/assets/fire.png')
+    this.load.image('flare', '/assets/fire.png');
   }
 
   create() {
