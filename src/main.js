@@ -8,10 +8,12 @@ class StartScene extends Phaser.Scene {
   }
 
   preload() {
+      //Load assets
       this.load.audio('bg-music', '/assets/bg.mp3');
   }
 
   create() {
+    //Music setup
     if (!this.sound.get('bg-music')) {
         const music = this.sound.add('bg-music', { 
             volume: 0.4, 
@@ -28,18 +30,20 @@ class StartScene extends Phaser.Scene {
         fontStyle: 'bold' 
     }).setOrigin(0.5)
 
+    //Instructions text
     this.add.text(400, 320, 'How to play: Enter number-answer and press enter', { 
     fontSize: '18px', 
     color: '#000000',
     }).setOrigin(0.5);
 
-    // Add this below your "How to play" text and above the Play button
+    //Bonus text
     this.add.text(400, 350, 'Bonus: +2 seconds for every correct answer!', { 
         fontSize: '18px', 
         color: '#33B864',
         fontStyle: 'bold'
     }).setOrigin(0.5);
 
+    //Play button
     const playBtn = this.add.text(400, 410, 'PLAY', { 
         fontSize: '32px', 
         color: '#FF8C42', 
@@ -79,6 +83,7 @@ class GameScene extends Phaser.Scene {
 
       this.bg = this.add.rectangle(0, 0, 800, 600, 0x33B864).setOrigin(0);
       
+      //Progress bar UI
       this.add.rectangle(400, 85, 608, 28, 0x000000); 
       this.add.rectangle(400, 85, 600, 20, 0x333333).setAlpha(0.5);
       this.barFill = this.add.rectangle(100, 85, 0, 20, 0x00ff00).setOrigin(0, 0.5);
@@ -242,7 +247,7 @@ class ResultScene extends Phaser.Scene {
   }
 }
 
-
+//Game configuration
 const config = {
   type: Phaser.WEBGL,
   width: 800,
