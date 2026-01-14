@@ -49,51 +49,67 @@ class GameScene extends Phaser.Scene {
     this.timeLeft = 20
   }
 
+  preload() {
+      this.load.image('flare', '/assets/fire.png')
+  }
+
   create() {
-    this.score = 0
-    this.userAnswer = ""
-    this.timeLeft = 20
+      this.score = 0;
+      this.userAnswer = "";
+      this.timeLeft = 20;
 
-    this.add.rectangle(0, 0, 800, 600, 0xFFFFFF).setOrigin(0)
-    
-    this.add.rectangle(400, 300, 400, 400, 0x666666)
-    this.fireSquare = this.add.rectangle(400, 300, 300, 300, 0xFF0000)
+      this.bg = this.add.rectangle(0, 0, 800, 600, 0x00FF00).setOrigin(0);
+      
+      this.add.rectangle(400, 85, 608, 28, 0x000000); 
+      this.add.rectangle(400, 85, 600, 20, 0x333333).setAlpha(0.5);
+      this.barFill = this.add.rectangle(100, 85, 0, 20, 0x00ff00).setOrigin(0, 0.5);
+      this.fireMarker = this.add.sprite(100, 85, 'flare').setScale(0.08);
 
-    this.scoreText = this.add.text(20, 20, 'Score: 0', { fontSize: '30px', color: '#000' })
-    this.timerText = this.add.text(780, 20, 'Time: 20', { fontSize: '30px', color: '#000' }).setOrigin(1, 0)
-    this.levelText = this.add.text(400, 200, '', { fontSize: '20px', color: '#000' }).setOrigin(0.5)
-    
-    this.problemText = this.add.text(400, 260, '', { 
-        fontSize: '48px', color: '#fff', fontStyle: 'bold' 
-    }).setOrigin(0.5)
+      this.scoreText = this.add.text(20, 20, 'Score: 0', {fontSize: '30px', color: '#000'});
+      this.timerText = this.add.text(780, 20, 'Time: 20', { fontSize: '30px', color: '#000'}).setOrigin(1, 0);
+      
+      this.add.rectangle(400, 350, 400, 400, 0x666666);
+      this.fireSquare = this.add.rectangle(400, 350, 300, 300, 0xFF0000);
 
-    this.inputText = this.add.text(400, 340, '?', { 
-        fontSize: '30px', color: '#0aaae4', backgroundColor: '#000', padding: {x:10, y:5}
-    }).setOrigin(0.5)
+      this.levelText = this.add.text(400, 220, '', {fontSize: '20px', color: '#000'}).setOrigin(0.5);
+      this.problemText = this.add.text(400, 300, '', {fontSize: '48px', color: '#fff', fontStyle: 'bold' }).setOrigin(0.5);
+      this.inputText = this.add.text(400, 380, '?', {fontSize: '30px', color: '#0aaae4', backgroundColor: '#000', padding: {x:10, y:5} }).setOrigin(0.5);
 
-    //Input Handling
-    this.input.keyboard.off('keydown') 
-    this.input.keyboard.on('keydown', this.handleInput, this)
-
-    //Timer event
-    this.time.addEvent({
-        delay: 1000,
-        callback: this.updateTimer,
-        callbackScope: this,
-        loop: true
-    })
-
-    this.generateProblem()
+      this.input.keyboard.off('keydown');
+      this.input.keyboard.on('keydown', this.handleInput, this);
+      this.time.addEvent({ delay: 1000, callback: this.updateTimer, callbackScope: this, loop: true });
+      
+      this.generateProblem();
   }
 
   updateTimer() {
-    this.timeLeft--
-    this.timerText.setText('Time: ' + this.timeLeft)
+      this.timeLeft--;
+      this.timerText.setText('Time: ' + this.timeLeft);
 
-    if (this.timeLeft <= 0) {
-        //Lose condition
-        this.scene.start('scene-result', { score: this.score, won: false })
-    }
+      let timePassed = 20 - this.timeLeft;
+      let progress = Phaser.Math.Clamp(timePassed / 20, 0, 1);
+
+      this.barFill.width = 600 * progress;
+      this.fireMarker.x = 100 + (600 * progress);
+
+      let colorObj = Phaser.Display.Color.Interpolate.ColorWithColor(
+          { r: 255, g: 0, b: 0 },
+          { r: 0, g: 255, b: 0 },
+          20,
+          this.timeLeft
+      );
+      
+      let colorBg = Phaser.Display.Color.GetColor(colorObj.r, colorObj.g, colorObj.b);
+      this.bg.setFillStyle(colorBg);
+      this.barFill.setFillStyle(colorBg);
+
+      if (this.timeLeft < 5 && this.timeLeft > 0) {
+          this.cameras.main.shake(100, 0.005);
+      }
+
+      if (this.timeLeft <= 0) {
+          this.scene.start('scene-result', { score: this.score, won: false });
+      }
   }
 
   generateProblem() {
