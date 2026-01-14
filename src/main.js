@@ -12,7 +12,7 @@ class StartScene extends Phaser.Scene {
 
     this.add.text(400, 200, 'FIRE MATH', { 
         fontSize: '64px', 
-        color: '#ff4400', 
+        color: '#FFD93D', 
         fontStyle: 'bold' 
     }).setOrigin(0.5)
 
@@ -21,21 +21,26 @@ class StartScene extends Phaser.Scene {
         color: '#000000' 
     }).setOrigin(0.5)
 
+    this.add.text(400, 340, 'How to play: Enter number-answer and press enter', { 
+    fontSize: '18px', 
+    color: '#000000',
+    }).setOrigin(0.5);
+
     const playBtn = this.add.text(400, 400, 'PLAY', { 
         fontSize: '32px', 
-        color: '#0aaae4', 
+        color: '#FF8C42', 
         backgroundColor: '#000',
         padding: { x: 20, y: 10 }
     })
     .setOrigin(0.5)
-    .setInteractive({ useHandCursor: true })
+    .setInteractive({useHandCursor: true })
 
     playBtn.on('pointerdown', () => {
         this.scene.start('scene-game')
     })
     
     playBtn.on('pointerover', () => playBtn.setStyle({ fill: '#ff0' }))
-    playBtn.on('pointerout', () => playBtn.setStyle({ fill: '#0aaae4' }))
+    playBtn.on('pointerout', () => playBtn.setStyle({ fill: '#FF8C42' }))
   }
 }
 
@@ -58,7 +63,7 @@ class GameScene extends Phaser.Scene {
       this.userAnswer = "";
       this.timeLeft = 20;
 
-      this.bg = this.add.rectangle(0, 0, 800, 600, 0x00FF00).setOrigin(0);
+      this.bg = this.add.rectangle(0, 0, 800, 600, 0x33B864).setOrigin(0);
       
       this.add.rectangle(400, 85, 608, 28, 0x000000); 
       this.add.rectangle(400, 85, 600, 20, 0x333333).setAlpha(0.5);
@@ -68,12 +73,13 @@ class GameScene extends Phaser.Scene {
       this.scoreText = this.add.text(20, 20, 'Score: 0', {fontSize: '30px', color: '#000'});
       this.timerText = this.add.text(780, 20, 'Time: 20', { fontSize: '30px', color: '#000'}).setOrigin(1, 0);
       
-      this.add.rectangle(400, 350, 400, 400, 0x666666);
-      this.fireSquare = this.add.rectangle(400, 350, 300, 300, 0xFF0000);
+      //Window frame
+      this.add.rectangle(400, 350, 400, 400, 0xD83A2D);
+      this.fireSquare = this.add.rectangle(400, 350, 300, 300, 0xFFD93D);
 
       this.levelText = this.add.text(400, 220, '', {fontSize: '20px', color: '#000'}).setOrigin(0.5);
       this.problemText = this.add.text(400, 300, '', {fontSize: '48px', color: '#fff', fontStyle: 'bold' }).setOrigin(0.5);
-      this.inputText = this.add.text(400, 380, '?', {fontSize: '30px', color: '#0aaae4', backgroundColor: '#000', padding: {x:10, y:5} }).setOrigin(0.5);
+      this.inputText = this.add.text(400, 380, '?', {fontSize: '30px', color: '#FF8C42', backgroundColor: '#000', padding: {x:10, y:5} }).setOrigin(0.5);
 
       this.input.keyboard.off('keydown');
       this.input.keyboard.on('keydown', this.handleInput, this);
@@ -93,8 +99,8 @@ class GameScene extends Phaser.Scene {
       this.fireMarker.x = 100 + (600 * progress);
 
       let colorObj = Phaser.Display.Color.Interpolate.ColorWithColor(
-          { r: 255, g: 0, b: 0 },
-          { r: 0, g: 255, b: 0 },
+          { r: 216, g: 58, b: 45 },
+          { r: 51, g: 184, b: 100 },
           20,
           this.timeLeft
       );
