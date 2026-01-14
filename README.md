@@ -35,7 +35,7 @@ A fast-paced, arithmetic-based survival game built with Phaser 3. Solve math pro
 ---
 
 ## Gameplay Logic
-* The game generates random arithmetic problems based on the current level of difficulty.
+* The game generates random arithmetic problems based on the current level of difficulty. 3 levels of difficulty: addition, substraction, multiplication. The difficulty increases with the progress (scores).
 * Players use the number keys to type their answer and the Enter key to submit.
 * Every correct answer resets the timer. If the timer reaches zero, the game ends.
 * A progress bar and a shifting background color (green to red) show the remaining time, creating a visual sense of urgency.
